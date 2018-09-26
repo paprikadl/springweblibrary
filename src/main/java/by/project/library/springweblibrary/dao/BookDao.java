@@ -4,14 +4,8 @@ import by.project.library.springweblibrary.domain.Book;
 
 import java.util.List;
 
-public interface BookDao {
+public interface BookDao extends GeneralDao<Book>{
 
-    List<Book> getAll();
-    Book get (long id);
-    Book save (Book obj);
-    void delete (Book object);
-
-    List<Book> search(String... searchString);
     List<Book> findTopBooks (int limit);
 
 }
