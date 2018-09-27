@@ -16,7 +16,9 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     List<Book> findByNameContainingIgnoreCaseOrAuthorFioContainingIgnoreCaseOrderByName(String name, String fio);
 
-    @Query("select new by.project.library.springweblibrary.domain.Book(b.id, b.name, b.pageCount, b.isbn, b.genre, b.author, b.publisher, b.image, b.descr, b.viewCount, b.totalRating, b.totalVoteCount, b.avgRating) from Book b")
+    Page<Book> findByNameContainingIgnoreCaseOrAuthorFioContainingIgnoreCaseOrderByName(String name, String fio, Pageable pageable);
+
+    @Query("select new by.project.library.springweblibrary.domain.Book(b.id, b.name, b.pageCount, b.isbn, b.genre, b.author, b.publisher, b.publishYear, b.image, b.descr, b.viewCount, b.totalRating, b.totalVoteCount, b.avgRating) from Book b")
     Page<Book> findAllWithoutContent(Pageable pageable);
 
     @Modifying(clearAutomatically = true)
@@ -26,10 +28,18 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("select new by.project.library.springweblibrary.domain.Book(b.id, b.image) from Book b")
     List<Book> findTopBooks(Pageable pageable);
 
-    @Query("select new by.project.library.springweblibrary.domain.Book(b.id, b.name, b.pageCount, b.isbn, b.genre, b.author, b.publisher, b.image, b.descr, b.viewCount, b.totalRating, b.totalVoteCount, b.avgRating) from Book b where b.genre.id = :genreId")
+    @Query("select new by.project.library.springweblibrary.domain.Book(b.id, b.name, b.pageCount, b.isbn, b.genre, b.author, b.publisher, b.publishYear, b.image, b.descr, b.viewCount, b.totalRating, b.totalVoteCount, b.avgRating) from Book b where b.genre.id = :genreId")
     Page<Book> findByGenre(@Param("genreId") long genteId, Pageable pageable);
 
     @Query("select b.content from Book b where b.id = :id")
     byte[] getContent(@Param("id") long id);
+
+    @Modifying
+    @Query("update Book b set b.viewCount = :viewCount where b.id = :id")
+    void updateViewCount(@Param("viewCount") long viewCount, @Param("id") long id);
+
+    @Modifying
+    @Query("update Book b set b.totalVoteCount = :totalVoteCount, b.totalRating = :totalRating, b.avgRating = :avgRating where b.id = :id")
+    void updateRating(@Param("totalRating") long totalRating, @Param("totalVoteCount") long totalVoteCount,  @Param("avgRating") int avgRating, @Param("id") long id);
 
 }

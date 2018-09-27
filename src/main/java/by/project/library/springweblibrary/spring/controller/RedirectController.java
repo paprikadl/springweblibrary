@@ -25,7 +25,7 @@ public class RedirectController {
     @Autowired
     private BookRepository bookRepository;
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public String baseUrlRedirect(HttpServletRequest request, HttpServletResponse httpServletResponse) {
 
         Page<Author> pageList = authorRepository.findByFioContainingIgnoreCaseOrderByFio("д", PageRequest.of(0, 10, new Sort(Sort.Direction.ASC, "fio")));
