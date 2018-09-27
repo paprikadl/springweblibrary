@@ -1,9 +1,13 @@
 package by.project.library.springweblibrary.spring.controller;
 
+import by.project.library.springweblibrary.domain.Author;
 import by.project.library.springweblibrary.spring.repository.AuthorRepository;
 import by.project.library.springweblibrary.spring.repository.BookRepository;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,7 +28,8 @@ public class RedirectController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String baseUrlRedirect(HttpServletRequest request, HttpServletResponse httpServletResponse) {
 
-        bookRepository.findByNameContainingIgnoreCaseOrAuthorFioContainingIgnoreCaseOrderByName("г", "наб");
+        Page<Author> pageList = authorRepository.findByFioContainingIgnoreCaseOrderByFio("д", PageRequest.of(0, 10, new Sort(Sort.Direction.ASC, "fio")));
+
         return "ok";
 
     }
