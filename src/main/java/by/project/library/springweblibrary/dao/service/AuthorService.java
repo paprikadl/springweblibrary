@@ -51,11 +51,11 @@ public class AuthorService implements AuthorDao {
 
     @Override
     public Page<Author> getAll(int pageNumber, int pageSize, String sortField, Sort.Direction sortDirection) {
-        return authorRepository.findAll(PageRequest.of(pageNumber, pageSize, new Sort(sortDirection, sortField)));
+        return authorRepository.findAll(new PageRequest(pageNumber, pageSize, new Sort(sortDirection, sortField)));
     }
 
     @Override
     public Page<Author> search(int pageNumber, int pageSize, String sortField, Sort.Direction sortDirection, String... searchString) {
-        return authorRepository.findByFioContainingIgnoreCaseOrderByFio(searchString[0], PageRequest.of(pageNumber, pageSize, new Sort(sortDirection, sortField)));
+        return authorRepository.findByFioContainingIgnoreCaseOrderByFio(searchString[0], new PageRequest(pageNumber, pageSize, new Sort(sortDirection, sortField)));
     }
 }

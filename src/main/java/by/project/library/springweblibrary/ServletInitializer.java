@@ -1,11 +1,9 @@
 package by.project.library.springweblibrary;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 
-@SpringBootApplication
-//@ComponentScan(basePackages = {"by.project.library.springweblibrary"})
+@SpringBootApplication(scanBasePackages = "by.project.library.springweblibrary")
 public class ServletInitializer extends SpringBootServletInitializer {
 
 }

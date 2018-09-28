@@ -51,11 +51,11 @@ public class GenreService implements GenreDao {
 
     @Override
     public Page<Genre> getAll(int pageNumber, int pageSize, String sortField, Sort.Direction sortDirection) {
-        return genreRepository.findAll(PageRequest.of(pageNumber, pageSize, new Sort(sortDirection, sortField)));
+        return genreRepository.findAll(new PageRequest(pageNumber, pageSize, new Sort(sortDirection, sortField)));
     }
 
     @Override
     public Page<Genre> search(int pageNumber, int pageSize, String sortField, Sort.Direction sortDirection, String... searchString) {
-        return genreRepository.findByNameContainingIgnoreCaseOrderByName(searchString[0], PageRequest.of(pageNumber, pageSize, new Sort(sortDirection, sortField)));
+        return genreRepository.findByNameContainingIgnoreCaseOrderByName(searchString[0], new PageRequest(pageNumber, pageSize, new Sort(sortDirection, sortField)));
     }
 }

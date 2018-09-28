@@ -51,11 +51,11 @@ public class PublisherService implements PublisherDao {
 
     @Override
     public Page<Publisher> getAll(int pageNumber, int pageSize, String sortField, Sort.Direction sortDirection) {
-        return publisherRepository.findAll(PageRequest.of(pageNumber, pageSize, new Sort(sortDirection, sortField)));
+        return publisherRepository.findAll(new PageRequest(pageNumber, pageSize, new Sort(sortDirection, sortField)));
     }
 
     @Override
     public Page<Publisher> search(int pageNumber, int pageSize, String sortField, Sort.Direction sortDirection, String... searchString) {
-        return publisherRepository.findByNameContainingIgnoreCaseOrderByName(searchString[0], PageRequest.of(pageNumber, pageSize, new Sort(sortDirection, sortField)));
+        return publisherRepository.findByNameContainingIgnoreCaseOrderByName(searchString[0], new PageRequest(pageNumber, pageSize, new Sort(sortDirection, sortField)));
     }
 }
