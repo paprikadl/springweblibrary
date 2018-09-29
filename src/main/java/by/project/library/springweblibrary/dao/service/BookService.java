@@ -19,20 +19,20 @@ public class BookService implements BookDao {
     @Autowired
     private BookRepository bookRepository;
 
-//    @Override
-//    public List<Book> findTopBooks(int limit) {
-//        return bookRepository.findTopBooks(PageRequest.of(0, limit, new Sort(Sort.Direction.DESC, "viewCount")));
-//}
+    @Override
+    public List<Book> findTopBooks(int limit) {
+     return bookRepository.findTopBooks(new PageRequest(0, limit, new Sort(Sort.Direction.DESC, "viewCount")));
+}
 
     @Override
     public byte[] getContent(long id) {
         return bookRepository.getContent(id);
     }
 
-//    @Override
-//    public Page<Book> findByGenre(int pageNumber, int pageSize, String sortField, Sort.Direction sortDirection, long genreId) {
-//        return bookRepository.findByGenre(genreId, PageRequest.of(pageNumber, pageSize, new Sort(sortDirection, sortField)));
-//    }
+    @Override
+    public Page<Book> findByGenre(int pageNumber, int pageSize, String sortField, Sort.Direction sortDirection, long genreId) {
+        return bookRepository.findByGenre(genreId, new PageRequest(pageNumber, pageSize, new Sort(sortDirection, sortField)));
+    }
 
     @Override
     public void updateViewCount(long viewCount, long id) {
@@ -82,15 +82,9 @@ public class BookService implements BookDao {
         return bookRepository.findAll(sort);
     }
 
-//    @Override
-//    public Page<Book> getAll(int pageNumber, int pageSize, String sortField, Sort.Direction sortDirection) {
-//        return bookRepository.findAllWithoutContent(new PageRequest(pageNumber, pageSize, new Sort(sortDirection, sortField)));
-//    }
-
-
     @Override
     public Page<Book> getAll(int pageNumber, int pageSize, String sortField, Sort.Direction sortDirection) {
-        return bookRepository.findByNameContainingIgnoreCaseOrAuthorFioContainingIgnoreCaseOrderByName("fgg", "gr",new PageRequest(pageNumber, pageSize, new Sort(sortDirection, sortField)));
+        return bookRepository.findAllWithoutContent(new PageRequest(pageNumber, pageSize, new Sort(sortDirection, sortField)));
     }
 
     @Override
