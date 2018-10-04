@@ -18,9 +18,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     Page<Book> findByNameContainingIgnoreCaseOrAuthorFioContainingIgnoreCaseOrderByName(String name, String fio, Pageable pageable);
 
-//    @Query("select new by.project.library.springweblibrary.domain.Book(b.id, b.name, b.pageCount, b.isbn, b.genre, b.author, b.publisher, b.publishYear, b.image, b.descr, b.viewCount, b.totalRating, b.totalVoteCount, b.avgRating) from Book b")
-//    Page<Book> findAllWithoutContent(Pageable pageable);
-
     @Query("select new Book(b.id, b.name, b.pageCount, b.isbn, b.genre, b.author, b.publisher, b.publishYear, b.image, b.descr, b.viewCount, b.totalRating, b.totalVoteCount, b.avgRating) from Book b")
     Page<Book> findAllWithoutContent(Pageable pageable);
 
@@ -28,18 +25,11 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("update Book b set b.content = :content where b.id = :id")
     void updateContent(@Param("content") byte[] content, @Param("id") long id);
 
-//    @Query("select new by.project.library.springweblibrary.domain.Book(b.id, b.image) from Book b")
-//    List<Book> findTopBooks(Pageable pageable);
-
     @Query("select new Book(b.id, b.image) from Book b")
     List<Book> findTopBooks(Pageable pageable);
 
-//    @Query("select new by.project.library.springweblibrary.domain.Book(b.id, b.name, b.pageCount, b.isbn, b.genre, b.author, b.publisher, b.publishYear, b.image, b.descr, b.viewCount, b.totalRating, b.totalVoteCount, b.avgRating) from Book b where b.genre.id = :genreId")
-//    Page<Book> findByGenre(@Param("genreId") long genteId, Pageable pageable);
-
     @Query("select new Book(b.id, b.name, b.pageCount, b.isbn, b.genre, b.author, b.publisher, b.publishYear, b.image, b.descr, b.viewCount, b.totalRating, b.totalVoteCount, b.avgRating) from Book b where b.genre.id = :genreId")
     Page<Book> findByGenre(@Param("genreId") long genteId, Pageable pageable);
-
 
     @Query("select b.content from Book b where b.id = :id")
     byte[] getContent(@Param("id") long id);
