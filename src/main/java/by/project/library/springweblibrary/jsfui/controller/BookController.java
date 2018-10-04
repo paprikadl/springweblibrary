@@ -46,6 +46,8 @@ public class BookController extends AbstractController<Book> {
 
     private LazyDataTable<Book> lazyModel;
 
+    private byte[] uploadedContent;
+
     private Page<Book> bookPages;
 
     private List<Book> topBooks;
@@ -128,5 +130,24 @@ public class BookController extends AbstractController<Book> {
     public void searchAction(){
         searchText = searchText.trim();
         searchType = SearchType.SEARCH_TEXT;
+    }
+
+    public byte[] getContent(long id) {
+
+        byte[] content;
+
+        if (uploadedContent != null) {
+            content = uploadedContent;
+        } else {
+
+            content = bookDao.getContent(id);
+
+        }
+
+        return content;
+    }
+
+    public void updateViewCount(long viewCount, long id){
+        bookDao.updateViewCount(viewCount + 1, id);
     }
 }
