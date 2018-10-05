@@ -16,6 +16,8 @@
 
         <ui:define name="content">
 
+            <ui:include src="/templates/dialogs/edit-dialog.xhtml"/>
+
             <h:form id="booksForm">
 
                 <p:dataGrid id="booksList" var="book" value="#{bookController.lazyModel}" columns="5"
@@ -74,13 +76,19 @@
                         </div>
 
                         <p:outputPanel layout="block" styleClass="admin-region" >
+
                             <p:commandLink title="#{msg.delete}">
                                 <o:graphicImage name="images/delete.png" styleClass="delete-icon" dataURI="true"/>
                             </p:commandLink>
 
-                            <p:commandLink title="#{msg.edit}">
+                            <p:commandLink title="#{msg.edit}"
+                                           action="#{bookController.editAction()}"
+                                           update="@([id$=dialogEditBook])">
+                                <f:setPropertyActionListener value="#{book}"
+                                                             target="#{bookController.selectedBook}"/>
                                 <o:graphicImage name="images/edit.png" styleClass="edit-icon" dataURI="true"/>
                             </p:commandLink>
+
                         </p:outputPanel>
 
 

@@ -8,6 +8,9 @@ import by.project.library.springweblibrary.jsfui.model.LazyDataTable;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.java.Log;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.CloseEvent;
+import org.primefaces.event.FileUploadEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -44,7 +47,14 @@ public class BookController extends AbstractController<Book> {
     @Autowired
     private GenreDao genreDao;
 
+    @Autowired
+    private GenreController genreController;
+
+    private Book selectedBook;
+
     private LazyDataTable<Book> lazyModel;
+
+    private byte[] uploadedImage;
 
     private byte[] uploadedContent;
 
@@ -59,6 +69,21 @@ public class BookController extends AbstractController<Book> {
     @PostConstruct
     public void init() {
         lazyModel = new LazyDataTable(this);
+    }
+
+    public void save() {
+
+        if (uploadedImage != null) {
+            selectedBook.setImage(uploadedImage);
+        }
+
+        if (uploadedContent != null) {
+            selectedBook.setContent(uploadedContent);
+        }
+
+        bookDao.save(selectedBook);
+        RequestContext.getCurrentInstance().execute("PF('dialogEditBook').hide()");
+        //PrimeFaces.current().executeScript("PF('dialogEditBook').hide()");
     }
 
     @Override
@@ -85,20 +110,27 @@ public class BookController extends AbstractController<Book> {
         return bookPages;
     }
 
-    public List<Book> getTopBooks() {
-        topBooks = bookDao.findTopBooks(TOP_BOOKS_LIMIT);
-        return topBooks;
+    @Override
+    public void addAction() {
+
     }
 
-    public void showBooksByGenre(long selectedGenreId){
-        searchType = SearchType.SEARCH_GENRE;
-        this.selectedGenreId = selectedGenreId;
+    public void onCloseDialog(CloseEvent event) {
+        uploadedContent = null;
     }
 
-    public void showAll(){
-        searchType = SearchType.ALL;
+    @Override
+    public void editAction() {
+        uploadedImage = selectedBook.getImage();
+
+        RequestContext.getCurrentInstance().execute("PF('dialogEditBook').show()");
+        //PrimeFaces.current().executeScript("PF('dialogEditBook').show()");
     }
 
+    @Override
+    public void deleteAction() {
+
+    }
 
     public String getSearchMessage(){
 
@@ -127,11 +159,6 @@ public class BookController extends AbstractController<Book> {
         return message;
     }
 
-    public void searchAction(){
-        searchText = searchText.trim();
-        searchType = SearchType.SEARCH_TEXT;
-    }
-
     public byte[] getContent(long id) {
 
         byte[] content;
@@ -145,6 +172,41 @@ public class BookController extends AbstractController<Book> {
         }
 
         return content;
+    }
+
+    public void uploadImage(FileUploadEvent event) {
+        if (event.getFile() != null) {
+            uploadedImage = event.getFile().getContents();
+        }
+    }
+
+    public void uploadContent(FileUploadEvent event) {
+        if (event.getFile() != null) {
+            uploadedContent = event.getFile().getContents();
+        }
+    }
+
+    public List<Book> getTopBooks() {
+        topBooks = bookDao.findTopBooks(TOP_BOOKS_LIMIT);
+        return topBooks;
+    }
+
+    public void showBooksByGenre(long selectedGenreId){
+        searchType = SearchType.SEARCH_GENRE;
+        this.selectedGenreId = selectedGenreId;
+    }
+
+    public void showAll(){
+        searchType = SearchType.ALL;
+    }
+
+    public void searchAction(){
+        searchText = searchText.trim();
+        searchType = SearchType.SEARCH_TEXT;
+    }
+
+    public Page<Book> getBookPages(){
+        return bookPages;
     }
 
     public void updateViewCount(long viewCount, long id){

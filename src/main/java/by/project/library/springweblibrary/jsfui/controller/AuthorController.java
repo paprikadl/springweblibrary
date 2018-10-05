@@ -1,7 +1,7 @@
 package by.project.library.springweblibrary.jsfui.controller;
 
-import by.project.library.springweblibrary.dao.GenreDao;
-import by.project.library.springweblibrary.domain.Genre;
+import by.project.library.springweblibrary.dao.AuthorDao;
+import by.project.library.springweblibrary.domain.Author;
 import by.project.library.springweblibrary.jsfui.model.LazyDataTable;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,63 +17,66 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import java.util.List;
 
+
 @ManagedBean
 @SessionScoped
 @Component
 @Getter
 @Setter
 @Transactional
-public class GenreController extends AbstractController<Genre> {
+public class AuthorController extends AbstractController<Author> {
 
     private int rowsCount = 20;
+
     private int first;
 
     @Autowired
-    private GenreDao genreDao;
+    private AuthorDao authorDao;
 
-    private Genre selectedGenre;
+    private Author selectedAuthor;
 
-    private LazyDataTable<Genre> lazyModel;
+    private LazyDataTable<Author> lazyModel;
 
-    private Page<Genre> genrePages;
-
+    private Page<Author> authorPages;
 
     @PostConstruct
     public void init() {
         lazyModel = new LazyDataTable(this);
     }
 
-    public List<Genre> find(String name) {
-        return genreDao.search(name);
-    }
-
     public void save() {
-        genreDao.save(selectedGenre);
-        RequestContext.getCurrentInstance().execute("PF('dialogGenre').hide()");
-        //PrimeFaces.current().executeScript("PF('dialogGenre').hide()");
+        authorDao.save(selectedAuthor);
+        RequestContext.getCurrentInstance().execute("PF('dialogAuthor').hide()");
+        //PrimeFaces.current().executeScript("PF('dialogAuthor').hide()");
     }
 
     @Override
-    public Page<Genre> search(int first, int count, String sortField, Sort.Direction sortDirection) {
-        return genrePages;
+    public Page<Author> search(int pageNumber, int pageSize, String sortField, Sort.Direction sortDirection) {
+        return authorPages;
     }
 
     @Override
     public void addAction() {
-
+        selectedAuthor = new Author();
+        showEditDialog();
     }
 
     @Override
     public void editAction() {
-
+        showEditDialog();
     }
 
     @Override
     public void deleteAction() {
-
+        authorDao.delete(selectedAuthor);
     }
 
-    public List<Genre> getAll() {
-        return genreDao.getAll(new Sort(Sort.Direction.ASC, "name"));
+    private void showEditDialog() {
+        RequestContext.getCurrentInstance().execute("PF('dialogAuthor').show()");
+        //PrimeFaces.current().executeScript("PF('dialogAuthor').show()");
+    }
+
+    public List<Author> find(String fio) {
+        return authorDao.search(fio);
     }
 }
