@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
@@ -22,7 +21,6 @@ import java.util.List;
 @Component
 @Getter
 @Setter
-@Transactional
 public class PublisherController extends AbstractController<Publisher> {
 
     private int rowsCount = 20;
@@ -48,7 +46,6 @@ public class PublisherController extends AbstractController<Publisher> {
     public void save() {
         publisherDao.save(selectedPublisher);
         RequestContext.getCurrentInstance().execute("PF('dialogPublisher').hide()");
-        //PrimeFaces.current().executeScript("PF('dialogPublisher').hide()");
     }
 
     @Override
@@ -75,7 +72,6 @@ public class PublisherController extends AbstractController<Publisher> {
 
     private void showEditDialog() {
         RequestContext.getCurrentInstance().execute("PF('dialogPublisher').show()");
-        //PrimeFaces.current().executeScript("PF('dialogPublisher').show()");
     }
 
     public List<Publisher> find(String name) {

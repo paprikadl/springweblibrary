@@ -23,7 +23,14 @@
                                         <div class="product_image_container">
                                             <div class="product_image_shadow">
 
-                                                <o:graphicImage width="157" height="236" value="#{book.image}" dataURI="true"/>
+                                                <h:outputLink value="#{request.contextPath}/PdfContent" target="_blank">
+
+                                                    <o:graphicImage width="157" height="236" value="#{book.image}" dataURI="true"/>
+                                                    <f:param name="id" value="#{book.id}"/>
+                                                    <f:param name="filename" value="#{book.name}"/>
+                                                    <f:param name="viewCount" value="#{book.viewCount}"/>
+
+                                                </h:outputLink>
 
                                             </div>
                                         </div>

@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
@@ -30,7 +29,6 @@ import java.util.ResourceBundle;
 @Getter
 @Setter
 @Log
-@Transactional
 public class BookController extends AbstractController<Book> {
 
     public static final int DEFAULT_PAGE_SIZE = 20;
@@ -83,7 +81,6 @@ public class BookController extends AbstractController<Book> {
 
         bookDao.save(selectedBook);
         RequestContext.getCurrentInstance().execute("PF('dialogEditBook').hide()");
-        //PrimeFaces.current().executeScript("PF('dialogEditBook').hide()");
     }
 
     @Override
@@ -117,19 +114,18 @@ public class BookController extends AbstractController<Book> {
 
     public void onCloseDialog(CloseEvent event) {
         uploadedContent = null;
+        uploadedImage = null;
     }
 
     @Override
     public void editAction() {
         uploadedImage = selectedBook.getImage();
-
         RequestContext.getCurrentInstance().execute("PF('dialogEditBook').show()");
-        //PrimeFaces.current().executeScript("PF('dialogEditBook').show()");
     }
 
     @Override
     public void deleteAction() {
-
+        bookDao.delete(selectedBook);
     }
 
     public String getSearchMessage(){

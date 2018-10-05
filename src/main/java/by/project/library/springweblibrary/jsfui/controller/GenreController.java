@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
@@ -22,7 +21,6 @@ import java.util.List;
 @Component
 @Getter
 @Setter
-@Transactional
 public class GenreController extends AbstractController<Genre> {
 
     private int rowsCount = 20;
@@ -50,7 +48,6 @@ public class GenreController extends AbstractController<Genre> {
     public void save() {
         genreDao.save(selectedGenre);
         RequestContext.getCurrentInstance().execute("PF('dialogGenre').hide()");
-        //PrimeFaces.current().executeScript("PF('dialogGenre').hide()");
     }
 
     @Override

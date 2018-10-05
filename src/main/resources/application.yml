@@ -17,7 +17,7 @@ spring:
         current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
         dialect: org.hibernate.dialect.MySQL5Dialect
         format_sql: true
-#        enable_lazy_load_no_trans: true
+        enable_lazy_load_no_trans: true
     show-sql: true
 
 logging:
