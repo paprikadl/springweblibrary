@@ -12,6 +12,7 @@ import org.apache.commons.io.IOUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.CloseEvent;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.RateEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -24,6 +25,7 @@ import javax.faces.context.FacesContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 @ManagedBean
@@ -226,5 +228,34 @@ public class BookController extends AbstractController<Book> {
 
     public void updateViewCount(long viewCount, long id){
         bookDao.updateViewCount(viewCount + 1, id);
+    }
+
+    public void onrate(RateEvent rateEvent) {
+
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+
+        int bookIndex = Integer.parseInt(params.get("bookIndex"));
+
+        Book book = bookPages.getContent().get(bookIndex);
+
+        long currentRating = Long.valueOf(rateEvent.getRating().toString());
+
+        long newRating = book.getTotalRating() + currentRating;
+
+        long newVoteCount = book.getTotalVoteCount() + 1;
+
+        int newAvgRating = calcAverageRating(newRating, newVoteCount);
+
+        bookDao.updateRating(newRating, newVoteCount, newAvgRating, book.getId());
+    }
+
+
+    private int calcAverageRating(long totalRating, long totalVoteCount) {
+
+        if (totalRating == 0 || totalVoteCount == 0) {
+            return 0;
+        }
+
+        return Long.valueOf(totalRating / totalVoteCount).intValue();
     }
 }
