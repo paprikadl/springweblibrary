@@ -8,6 +8,7 @@ import by.project.library.springweblibrary.jsfui.model.LazyDataTable;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.java.Log;
+import org.apache.commons.io.IOUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.CloseEvent;
 import org.primefaces.event.FileUploadEvent;
@@ -20,6 +21,8 @@ import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -110,11 +113,28 @@ public class BookController extends AbstractController<Book> {
     @Override
     public void addAction() {
 
+        selectedBook = new Book();
+        uploadedImage = loadDefaultIcon();
+        uploadedContent = null;
+
+        RequestContext.getCurrentInstance().execute("PF('dialogEditBook').show()");
+    }
+
+    private byte[] loadDefaultIcon(){
+
+        InputStream stream = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/resources/images/no-cover.jpg");
+
+        try {
+            return IOUtils.toByteArray(stream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public void onCloseDialog(CloseEvent event) {
         uploadedContent = null;
-        uploadedImage = null;
     }
 
     @Override
@@ -131,7 +151,6 @@ public class BookController extends AbstractController<Book> {
     public String getSearchMessage(){
 
         ResourceBundle bundle = ResourceBundle.getBundle("library", FacesContext.getCurrentInstance().getViewRoot().getLocale());
-
 
         String message = null;
 
